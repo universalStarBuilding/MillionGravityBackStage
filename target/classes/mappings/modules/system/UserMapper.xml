@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="milliongravity.modules.system.dao.UserDao" >
+  <resultMap id="BaseResultMap" type="milliongravity.modules.system.entity.User" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="NAME_LOGIN" property="nameLogin" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="PWD_LOGIN" property="pwdLogin" jdbcType="VARCHAR" />
+    <result column="USER_TYPE" property="userType" jdbcType="INTEGER" />
+    <result column="PHONE" property="phone" jdbcType="INTEGER" />
+    <result column="TIME_CREATE" property="timeCreate" jdbcType="TIMESTAMP" />
+    <result column="TIME_LAST_LOGIN" property="timeLastLogin" jdbcType="TIMESTAMP" />
+    <result column="TIME_LAST_LOGOUT" property="timeLastLogout" jdbcType="TIMESTAMP" />
+    <result column="PWD_REST" property="pwdRest" jdbcType="BIT" />
+    <result column="IS_AUTH" property="isAuth" jdbcType="BIT" />
+    <result column="IS_LOCKED" property="isLocked" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, NAME_LOGIN, EMAIL, PWD_LOGIN, USER_TYPE, PHONE, TIME_CREATE, TIME_LAST_LOGIN,
+    TIME_LAST_LOGOUT, PWD_REST, IS_AUTH, IS_LOCKED
+  </sql>
+  <select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="delete" parameterType="java.lang.Integer" >
+    delete from user
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="milliongravity.modules.system.entity.User" >
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="nameLogin != null" >
+        NAME_LOGIN,
+      </if>
+      <if test="email != null" >
+        EMAIL,
+      </if>
+      <if test="pwdLogin != null" >
+        PWD_LOGIN,
+      </if>
+      <if test="userType != null" >
+        USER_TYPE,
+      </if>
+      <if test="phone != null" >
+        PHONE,
+      </if>
+      <if test="timeCreate != null" >
+        TIME_CREATE,
+      </if>
+      <if test="timeLastLogin != null" >
+        TIME_LAST_LOGIN,
+      </if>
+      <if test="timeLastLogout != null" >
+        TIME_LAST_LOGOUT,
+      </if>
+      <if test="pwdRest != null" >
+        PWD_REST,
+      </if>
+      <if test="isAuth != null" >
+        IS_AUTH,
+      </if>
+      <if test="isLocked != null" >
+        IS_LOCKED,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="nameLogin != null" >
+        #{nameLogin,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="pwdLogin != null" >
+        #{pwdLogin,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=INTEGER},
+      </if>
+      <if test="timeCreate != null" >
+        #{timeCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeLastLogin != null" >
+        #{timeLastLogin,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeLastLogout != null" >
+        #{timeLastLogout,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pwdRest != null" >
+        #{pwdRest,jdbcType=BIT},
+      </if>
+      <if test="isAuth != null" >
+        #{isAuth,jdbcType=BIT},
+      </if>
+      <if test="isLocked != null" >
+        #{isLocked,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="milliongravity.modules.system.entity.User" >
+    update user
+    <set>
+      <if test="nameLogin != null" >
+        NAME_LOGIN = #{nameLogin,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="pwdLogin != null" >
+        PWD_LOGIN = #{pwdLogin,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        USER_TYPE = #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=INTEGER},
+      </if>
+      <if test="timeCreate != null" >
+        TIME_CREATE = #{timeCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeLastLogin != null" >
+        TIME_LAST_LOGIN = #{timeLastLogin,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeLastLogout != null" >
+        TIME_LAST_LOGOUT = #{timeLastLogout,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pwdRest != null" >
+        PWD_REST = #{pwdRest,jdbcType=BIT},
+      </if>
+      <if test="isAuth != null" >
+        IS_AUTH = #{isAuth,jdbcType=BIT},
+      </if>
+      <if test="isLocked != null" >
+        IS_LOCKED = #{isLocked,jdbcType=BIT},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>
