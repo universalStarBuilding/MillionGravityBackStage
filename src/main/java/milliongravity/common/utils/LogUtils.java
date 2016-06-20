@@ -1,6 +1,8 @@
 package milliongravity.common.utils;
 
 import milliongravity.common.config.CommonDictionaryConfig;
+import milliongravity.common.session.VirtualSession;
+import milliongravity.common.session.VirtualSessionManager;
 import milliongravity.modules.system.dao.LogAccessDao;
 import milliongravity.modules.system.entity.LogAccess;
 import milliongravity.modules.system.entity.User;
@@ -25,10 +27,11 @@ public class LogUtils {
 		 String authHeader=requestContext.getHeaderString("Authorization");
     	String tokenText=null;
     	if (authHeader!=null)
-    		tokenText=authHeader.substring(7);
+    		tokenText=authHeader;
 		User user=null;
+		VirtualSession session= VirtualSessionManager.getInstance().getSession(tokenText, false);
 		if(tokenText!=null)
-			user = (User) UserUtils.getUser(tokenText);
+			user = (User)session.getAttribute("user");
 		LogAccess log = new LogAccess();
 		log.setCreateBy(user==null?"visitor":String.valueOf(user.getId()));
 		log.setCreateDate(DateUtils.getDateTime());

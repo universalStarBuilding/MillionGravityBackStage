@@ -11,30 +11,30 @@ import java.util.Date;
 @XmlRootElement
 public class User extends DataEntity  implements Principal {
 
-
+    @FormParam("nameLogin")
     private String nameLogin;
-
+    @FormParam("email")
     private String email;
-
+    @FormParam("pwdLogin")
     private String pwdLogin;
-
+    @FormParam("userType")
     private Integer userType;
-
+    @FormParam("phone")
     private Integer phone;
-
+    @FormParam("timeCreate")
     private Date timeCreate;
-
+    @FormParam("timeLastLogin")
     private Date timeLastLogin;
-
+    @FormParam("timeLastLogout")
     private Date timeLastLogout;
-
+    @FormParam("pwdRest")
     private Boolean pwdRest;
-
+    @FormParam("isAuth")
     private Boolean isAuth;
-
+    @FormParam("isLocked")
     private Boolean isLocked;
     private String name;
-
+    @FormParam("token")
     private  String token;
 
     public String getToken() {

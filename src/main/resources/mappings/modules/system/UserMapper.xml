@@ -19,11 +19,26 @@
     ID, NAME_LOGIN, EMAIL, PWD_LOGIN, USER_TYPE, PHONE, TIME_CREATE, TIME_LAST_LOGIN,
     TIME_LAST_LOGOUT, PWD_REST, IS_AUTH, IS_LOCKED
   </sql>
-  <select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <sql id="base_where">
+    <where>
+      1=1
+      <if test="id != null and id != ''" >
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="nameLogin != null and nameLogin != ''" >
+        and NAME_LOGIN = #{nameLogin,jdbcType=VARCHAR}
+      </if>
+      <if test="email != null and email != ''" >
+        and EMAIL=#{email,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+
+  <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from user
-    where ID = #{id,jdbcType=INTEGER}
+    <include refid="base_where"></include>
   </select>
   <delete id="delete" parameterType="java.lang.Integer" >
     delete from user

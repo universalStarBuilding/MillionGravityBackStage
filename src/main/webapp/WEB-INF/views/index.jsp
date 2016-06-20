@@ -1,10 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
 <html>
 <head>
-    <title>内容页的标题</title>
+    <title>登录</title>
+    <script src="${basePath}/js/base/test.js" type="text/javascript"></script>
 </head>
 <body>
-内容页的body部分
+
+<input type="button" value="测试token" id="testButton">
 </body>
 </html>

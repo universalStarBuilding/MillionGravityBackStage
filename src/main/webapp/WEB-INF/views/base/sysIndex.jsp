@@ -6,8 +6,8 @@
 </head>
 <body>
     <form id="loginForm">
-        <label>登录名</label> <input name="loginCode" type="text" required/>
-        <label>密码</label> <input name="password" type="password" required/>
+        <label>登录名</label> <input name="nameLogin" type="text" required/>
+        <label>密码</label> <input name="pwdLogin" type="password" required/>
         <input type="button" value="登录" id="loginButton">
     </form>
 </body>

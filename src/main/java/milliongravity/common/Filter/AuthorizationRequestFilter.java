@@ -1,6 +1,5 @@
 package milliongravity.common.Filter;
 
-import com.google.gson.Gson;
 import milliongravity.common.security.JwtUtil;
 import milliongravity.common.session.VirtualSession;
 import milliongravity.common.session.VirtualSessionManager;
@@ -21,6 +20,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Provider
@@ -28,12 +30,17 @@ import java.io.IOException;
 public class AuthorizationRequestFilter implements ContainerRequestFilter
 {
 	private static final Logger logger = LoggerFactory.getLogger(AuthorizationRequestFilter.class);
-
+	private final List<String>tokenCkList;
 	@Inject
 	javax.inject.Provider<UriInfo> uriInfo;
 
 	@Autowired
 	UserService userService;
+
+	public AuthorizationRequestFilter(List<String> tokenCkList)
+	{
+		this.tokenCkList = tokenCkList;
+	}
 
 	@Override
 	public void filter(ContainerRequestContext requestContext)
@@ -42,37 +49,37 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter
 		//得到访问的方法 例如GET,POST
 		String method = requestContext.getMethod().toLowerCase();
 		//得到访问路径
-		String path = ((ContainerRequest) requestContext).getPath(true).toLowerCase();
+		String path = "/"+((ContainerRequest) requestContext).getPath(true).toLowerCase();
 
-		//get application.wadl和application.wadl/xsd0.xsd不需要验证，post验证过滤,注册过滤。
-		if (("get".equals(method) && ("application.wadl".equals(path) || "application.wadl/xsd0.xsd".equals(path)))
-				|| ("post".equals(method) &&( "authentication".equals(path)||"regist".equals(path)))||("get".equals(method) && "user".equals(path)))
+		boolean skipCheck=true;
+		for(String url:tokenCkList)
 		{
-			// pass through the filter.
-			//requestContext.setSecurityContext(new SecurityContextAuthorizer(uriInfo,new AuthorPricinple("pass"), new String[]{"pass"}));
-			return;
+			if(path.equals(url.toLowerCase()))
+			{
+				skipCheck=false;
+			}
 		}
-
+		if(skipCheck)
+			return;
 		//获取头信息中的token
-		String authorizationHeader = ((ContainerRequest) requestContext).getHeaderString("auth_token");
-		String authHeader=requestContext.getHeaderString("Authorization");
-		//remove "Bearer "
-		String tokenText=null;
-		//从hearder中获取token
-		if (authHeader!=null)
-			tokenText=authHeader.substring(7);
+		String tokenText=requestContext.getHeaderString("Authorization");
+
 
 		//如果token为空抛出
-		if (authorizationHeader == null)
+		if (tokenText == null)
 		{
-
 			throw new WebApplicationException(Response.Status.UNAUTHORIZED);//抛出未认证的错误
 		}
 		//把Bear Token换成Token
-		String strToken=JwtUtil.extractJwtTokenFromAuthorizationHeader(authorizationHeader);
+		String strToken=JwtUtil.extractJwtTokenFromAuthorizationHeader(tokenText);
 		if (JwtUtil.isValid(strToken))
 		{
-			String userId=JwtUtil.getUserId(strToken);//反解出Name
+			VirtualSession session= VirtualSessionManager.getInstance().getSession(tokenText, false);
+			if(session==null)
+			{
+				throw new WebApplicationException("Authentication failed");
+			}
+			/*String userId=JwtUtil.getUserId(strToken);//反解出Name
 			String[] roles=JwtUtil.getRoles(strToken);//反解出角色
 			int version=JwtUtil.getVersion(strToken);//得到版本
 			if(userId !=null&&roles.length!=0&&version!=-1)
@@ -98,7 +105,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter
 			}
 			else {
 				logger.info("name, roles or version missing from token");
-			}
+			}*/
 		}
 		else {
 			logger.info("token is invalid");

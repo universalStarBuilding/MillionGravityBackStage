@@ -5,6 +5,7 @@ package milliongravity.modules.system.web;
 
 
 import milliongravity.common.persistence.AuthenticationResult;
+import milliongravity.common.persistence.annotation.TokenCheck;
 import milliongravity.common.security.JwtUtil;
 import milliongravity.common.session.VirtualSession;
 import milliongravity.common.session.VirtualSessionManager;
@@ -16,6 +17,7 @@ import org.glassfish.jersey.server.mvc.Viewable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
@@ -38,8 +40,8 @@ public class loginController extends BaseController{
     }
     @POST
     @Path("doLogin")
-    @Produces(MediaType.TEXT_PLAIN)
-    public  AuthenticationResult  doLogin(@BeanParam User user)
+    @Produces(MediaType.APPLICATION_JSON)
+    public  AuthenticationResult  doLogin( @BeanParam  User user)
     {
         AuthenticationResult result = new AuthenticationResult();
         user=userService.get(user);
@@ -63,12 +65,30 @@ public class loginController extends BaseController{
             //.........
             //登录成功，生成token，生成用户虚拟session
             String token = JwtUtil.generateToken(String.valueOf(user.getId()));
-            VirtualSessionManager.getInstance().getSession(token, true).addAttribute("User", user);
+            VirtualSessionManager.getInstance().getSession(token, true).addAttribute("user", user);
             System.out.println(VirtualSessionManager.getInstance().getSession(token,false));
             logger.debug("login token="+token);
             result.setToken(token);
         }
         return result;
+    }
+
+    @POST
+    @Path("test")
+    @Produces(MediaType.APPLICATION_JSON)
+    @TokenCheck
+    public  String  test( String test)
+    {
+        return test;
+    }
+
+    @POST
+    @Path("test22")
+    @Produces(MediaType.APPLICATION_JSON)
+    @TokenCheck
+    public  String  test22( String test)
+    {
+        return test;
     }
 
 

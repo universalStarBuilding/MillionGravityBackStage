@@ -1,4 +1,4 @@
-/*var Cookie = {
+var Cookie = {
     TOKEN: 'cookie.token',
     LOGINNAME: 'cookie.username',
     THEME: 'cookie.theme',
@@ -8,6 +8,7 @@
 var RequestHeader = {
     TOKEN: 'Authorization',
 };
+/*
 $(function () {
 
     // 当遇到 401 状态码时，清空 cookie 中的 token，并跳转到登录页面
@@ -37,34 +38,35 @@ $(function () {
 });*/
 $(document).ready(function() {
     $("#loginButton").click(loginSystem);
-    /*$("#loginButton").click(function (){
-        $.post(basePath+"/doLogin",
-            {
-                loginCode:"admin@qq.com"
-            },function(data){
-                alert("code:"+data["code"]+"   message:"+data["messageDesc"]);
-                console.log(data["code"],data["messageDesc"],data["vo"]);
-            },"json");
-    });*/
 });
+function testToken()
+{
+    $.post(basePath+"/test",
+        {
+            test:"admin@qq.com",
 
+        },function(data){
+            // 登录成功，将 token 与 username 放入 cookie 中
+            $.cookie(Cookie.TOKEN, data["token"]);
+
+            location.href = basePath+"page/index.jsp";
+        },"json");
+}
 function loginSystem()
 {
 
     //$("#commentForm").validate({
         //submitHandler: function() {
-            $.ajax({
-                url:basePath+"/doLogin",
-                type: "post",
-              //  dataType: "json",
-                data: $("#loginForm").serialize(),
-                success: function(data){
+        $.post(basePath+"/doLogin",
+            {
+                nameLogin:"admin@qq.com",
+                pwdLogin:"admin",
+            },function(data){
+                // 登录成功，将 token 与 username 放入 cookie 中
+                $.cookie(Cookie.TOKEN, data["token"]);
 
-                },
-                error: function(request){
-                    console.log("获取筹资项目详情信息异常");
-                }
-            });
+                location.href = basePath+"page/index.jsp";
+            },"json");
        // }
    // });
         //noinspection JSUnresolvedFunction
