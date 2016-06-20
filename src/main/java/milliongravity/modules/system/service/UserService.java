@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Junz
  * @version 2016-5-19
  */
-@Service(value="sysUserService")
+@Service(value="userService")
 @Transactional
 public class UserService extends BaseService
 {

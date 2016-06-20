@@ -70,7 +70,6 @@ public class AirLogFilter implements ContainerRequestFilter, ClientRequestFilter
 
     @Override
     public void filter(ClientRequestContext context) throws IOException {
-        System.out.println("1");
         long id = logSequence.incrementAndGet();
         StringBuilder b = new StringBuilder();
         printRequestLine(CLIENT_REQUEST, b, id, context.getMethod(), context.getUri());
@@ -80,7 +79,6 @@ public class AirLogFilter implements ContainerRequestFilter, ClientRequestFilter
 
     @Override
     public void filter(ClientRequestContext requestContext, ClientResponseContext responseContext) throws IOException {
-        System.out.println("2");
         long id = logSequence.incrementAndGet();
         StringBuilder b = new StringBuilder();
         printResponseLine(CLIENT_RESPONSE, b, id, responseContext.getStatus());
@@ -90,7 +88,6 @@ public class AirLogFilter implements ContainerRequestFilter, ClientRequestFilter
 
     @Override
     public void filter(ContainerRequestContext context) throws IOException {
-        System.out.println("3");
         if (LOGGER.isDebugEnabled()){
             long beginTime = System.currentTimeMillis();//1、开始时间
             startTimeThreadLocal.set(beginTime);		//线程绑定变量（该数据只有当前请求的线程可见）
@@ -106,20 +103,21 @@ public class AirLogFilter implements ContainerRequestFilter, ClientRequestFilter
 
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
-        System.out.println("4");
 
         long beginTime = startTimeThreadLocal.get();//得到线程绑定的局部变量（开始时间）
         long endTime = System.currentTimeMillis(); 	//2、结束时间
+        int timeCost= (int) (endTime - beginTime);
         // 打印JVM信息。
         if (LOGGER.isDebugEnabled()){
 
             LOGGER.debug("计时结束：{}  耗时：{}  URI: {}  最大内存: {}m  已分配内存: {}m  已分配内存中的剩余空间: {}m  最大可用内存: {}m",
-                    new SimpleDateFormat("hh:mm:ss.SSS").format(endTime), DateUtils.formatDateTime(endTime - beginTime),
+                    new SimpleDateFormat("hh:mm:ss.SSS").format(endTime), timeCost,
                     requestContext.getUriInfo().getRequestUri(), Runtime.getRuntime().maxMemory()/1024/1024, Runtime.getRuntime().totalMemory()/1024/1024, Runtime.getRuntime().freeMemory()/1024/1024,
                     (Runtime.getRuntime().maxMemory()-Runtime.getRuntime().totalMemory()+Runtime.getRuntime().freeMemory())/1024/1024);
         }
+
         // 保存日志
-        LogUtils.saveLog(requestContext, null,null,Integer.parseInt(DateUtils.formatDateTime(endTime - beginTime)));
+        LogUtils.saveLog(requestContext, null,null,timeCost);
         /*long id = logSequence.incrementAndGet();
         StringBuilder b = new StringBuilder();
         printResponseLine(SERVER_RESPONSE, b, id, responseContext.getStatus());

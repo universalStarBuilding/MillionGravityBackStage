@@ -14,7 +14,7 @@ import javax.ws.rs.container.ContainerRequestContext;
  */
 public class LogUtils {
 
-	private static LogAccessDao logAccessDao = SpringContextHolder.getBean(LogAccessDao.class);
+	//private static LogAccessDao logAccessDao = SpringContextHolder.getBean(LogAccessDao.class);
 
 
 	
@@ -40,7 +40,7 @@ public class LogUtils {
 		log.setRequestUri(requestContext.getUriInfo().getRequestUri().toString());
 		log.setParams("");
 		log.setMethod(requestContext.getMethod());
-		log.setException(ex.getMessage());
+		log.setException(ex==null?"":ex.getMessage());
 		log.setTimeCost(timeCost);
 		// 异步保存日志
 		new SaveLogThread(log,null, ex).start();

@@ -4,6 +4,7 @@
 package milliongravity.modules.system.web;
 
 
+import milliongravity.common.persistence.AuthenticationResult;
 import milliongravity.common.security.JwtUtil;
 import milliongravity.common.session.VirtualSession;
 import milliongravity.common.session.VirtualSessionManager;
@@ -38,13 +39,14 @@ public class loginController extends BaseController{
     @POST
     @Path("doLogin")
     @Produces(MediaType.TEXT_PLAIN)
-    public  String  doLogin(@BeanParam User user)
+    public  AuthenticationResult  doLogin(@BeanParam User user)
     {
+        AuthenticationResult result = new AuthenticationResult();
         user=userService.get(user);
         if(user==null)
         {
             //异常处理机制，记录异常
-            return "失败";
+            return null;
         }
         //判断用户在已经登录且session未失效时，重复登录时的处理
         if(StringUtils.isNotBlank(user.getToken()))
@@ -59,15 +61,14 @@ public class loginController extends BaseController{
         {
             //验证登录等相关操作，暂时省略，等认证以及权限机制搞定再去处理
             //.........
-
             //登录成功，生成token，生成用户虚拟session
             String token = JwtUtil.generateToken(String.valueOf(user.getId()));
-
             VirtualSessionManager.getInstance().getSession(token, true).addAttribute("User", user);
             System.out.println(VirtualSessionManager.getInstance().getSession(token,false));
             logger.debug("login token="+token);
+            result.setToken(token);
         }
-        return ;
+        return result;
     }
 
 

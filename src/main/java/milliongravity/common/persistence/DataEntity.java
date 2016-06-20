@@ -37,4 +37,7 @@ public abstract class DataEntity<T> extends  BaseEntity<T>{
 	}
 
 
+	public boolean getIsNewRecord() {
+		return true;
+	}
 }
