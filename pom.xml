@@ -31,6 +31,7 @@
         <validator.version>5.1.1.Final</validator.version>
         <sitemesh.version>3.0.0</sitemesh.version>
         <jsonwebtoken.version>0.6.0</jsonwebtoken.version>
+        <urlrewrite.version>4.0.4</urlrewrite.version>
     </properties>
     <!-- 设定主仓库，按设定顺序进行查找。 -->
     <repositories>
@@ -48,9 +49,18 @@
             <url>http://mvnrepository.com/artifact/org.sitemesh/sitemesh</url>
         </repository>
 
+
+
     </repositories>
 
     <dependencies>
+        <!-- URL Rewrite -->
+        <!-- https://mvnrepository.com/artifact/org.tuckey/urlrewritefilter -->
+        <dependency>
+            <groupId>org.tuckey</groupId>
+            <artifactId>urlrewritefilter</artifactId>
+            <version>${urlrewrite.version}</version>
+        </dependency>
         <!-- MySQL driver dependencies -->
         <dependency>
             <groupId>mysql</groupId>

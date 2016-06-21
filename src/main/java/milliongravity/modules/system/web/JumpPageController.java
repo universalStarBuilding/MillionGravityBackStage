@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType;
  * @version 2015-05-19
  */
 @Component
-@Path("/page")
+@Path("/page1111")
 public class JumpPageController extends BaseController{
 
     @GET

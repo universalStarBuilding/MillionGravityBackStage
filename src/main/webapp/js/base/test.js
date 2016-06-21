@@ -32,10 +32,10 @@ $(document).ready(function() {
 });
 function testToken()
 {
-    $.post(basePath+"/test",
+    $.post("/test",
         {
             test:"admin@qq.com",
         },function(data){
-            location.href ="/page/index.jsp";
+            location.href ="/page/index.html";
         },"json");
 }

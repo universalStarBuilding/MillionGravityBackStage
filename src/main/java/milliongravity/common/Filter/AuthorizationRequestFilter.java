@@ -82,14 +82,13 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter
 		}
 		//把Bear Token换成Token
 		String strToken=JwtUtil.extractJwtTokenFromAuthorizationHeader(tokenText);
+		VirtualSession session= VirtualSessionManager.getInstance().getSession(tokenText, false);
+		if(session==null)
+		{
+			throw new WebApplicationException("Authentication failed");
+		}
 		if (JwtUtil.isValid(strToken))
 		{
-			VirtualSession session= VirtualSessionManager.getInstance().getSession(tokenText, false);
-			if(session==null)
-			{
-				throw new WebApplicationException("Authentication failed");
-			}
-
 			User user=(User)session.getAttribute("user");
 
 			//注入SecurityContext
@@ -127,9 +126,9 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter
 		else
 		{
 			logger.info("token is invalid");
-
+			System.out.println("token is invalid");
 		}
-		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+
 	}
 
 }
