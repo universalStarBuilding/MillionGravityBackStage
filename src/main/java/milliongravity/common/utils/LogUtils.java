@@ -10,20 +10,29 @@ import milliongravity.modules.system.utils.UserUtils;
 
 import javax.ws.rs.container.ContainerRequestContext;
 /**
+ * @Name:
+ * @Author: junz（作者）
+ * @Version: V1.00 （版本号）
+ * @Create Date: 2016-06-10（创建日期）
+ * @Description:
  * 日志工具类
- * @author junz
- * @version 2016-06-10
  */
 public class LogUtils {
 
-	//private static LogAccessDao logAccessDao = SpringContextHolder.getBean(LogAccessDao.class);
+	private static LogAccessDao logAccessDao = SpringContextHolder.getBean(LogAccessDao.class);
 
 
-	
+
 	/**
-	 * 保存日志
+	 * @Name:
+	 * @Author: junz（作者）
+	 * @Version: V1.00 （版本号）
+	 * @Create Date: 2016-06-10（创建日期）
+	 * @param exception 异常  title 记录日志的url描述 timeCost耗时
+	 * @Description:
+	 * 保存访问日志日志记录
 	 */
-	public static void saveLog(ContainerRequestContext requestContext, Exception ex,String title,int timeCost){
+	public static void saveAccessLog(ContainerRequestContext requestContext, Exception ex,String title,int timeCost){
 		 String authHeader=requestContext.getHeaderString("Authorization");
     	String tokenText=null;
     	if (authHeader!=null)
@@ -46,20 +55,25 @@ public class LogUtils {
 		log.setException(ex==null?"":ex.getMessage());
 		log.setTimeCost(timeCost);
 		// 异步保存日志
-		new SaveLogThread(log,null, ex).start();
+		new SaveAccessLogThread(log,null, ex).start();
 	}
 
 	/**
-	 * 保存日志线程
+	 * @Name:
+	 * @Author: junz（作者）
+	 * @Version: V1.00 （版本号）
+	 * @Create Date: 2016-06-10（创建日期）
+	 * @Description:
+	 * 保存访问日志日志线程
 	 */
-	public static class SaveLogThread extends Thread{
+	public static class SaveAccessLogThread extends Thread{
 		
 		private LogAccess log;
 		private Object handler;
 		private Exception ex;
 		
-		public SaveLogThread(LogAccess log, Object handler, Exception ex){
-			super(SaveLogThread.class.getSimpleName());
+		public SaveAccessLogThread(LogAccess log, Object handler, Exception ex){
+			super(SaveAccessLogThread.class.getSimpleName());
 			this.log = log;
 			this.handler = handler;
 			this.ex = ex;
@@ -80,8 +94,7 @@ public class LogUtils {
 			}
 			// 保存日志信息
 			//log.preInsert();
-			LogAccessDao logDao = SpringContextHolder.getBean(LogAccessDao.class);
-			logDao.insert(log);
+			logAccessDao.insert(log);
 		}
 	}
 

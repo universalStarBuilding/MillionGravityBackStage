@@ -40,9 +40,8 @@
 
 package milliongravity.common.web;
 
-import milliongravity.common.Filter.AuthorizationCheckerFilter;
+import milliongravity.common.Filter.FeatureAnnotatedFactory;
 import milliongravity.common.Filter.AuthorizationRequestFilter;
-import milliongravity.modules.system.interceptor.AirLogFilter;
 import milliongravity.modules.system.web.loginController;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
@@ -67,10 +66,11 @@ public class MyApplication extends ResourceConfig {
         //filter
         //register(AirLogFilter.class);
 
-        //filter
-       // register(AuthorizationRequestFilter.class);
 
-        register(AuthorizationCheckerFilter.class);
+
+        register(FeatureAnnotatedFactory.class);
+        //filter
+        register(AuthorizationRequestFilter.class);
 
 
         // Tracing support.

@@ -35,11 +35,7 @@ function testToken()
     $.post(basePath+"/test",
         {
             test:"admin@qq.com",
-
         },function(data){
-            // 登录成功，将 token 与 username 放入 cookie 中
-            $.cookie(Cookie.TOKEN, data["token"]);
-
-            location.href = basePath+"page/index.jsp";
+            location.href ="/page/index.jsp";
         },"json");
 }

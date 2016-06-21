@@ -40,8 +40,6 @@ public class SecurityContextAuthorizer implements SecurityContext {
         this.roles = new HashSet<>(Arrays.asList((roles != null) ? roles : new String[]{}));
     }
 
-
-
     @Override
     public Principal getUserPrincipal() {
         return this.principal;

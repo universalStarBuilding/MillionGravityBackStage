@@ -20,17 +20,22 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-
+/**
+ * @Name:
+ * @Author: junz（作者）
+ * @Version: V1.00 （版本号）
+ * @Create Date: 2016-06-19（创建日期）
+ * @Description:
+ * 权限认证过滤器
+ */
 @Provider
 @Priority(Priorities.AUTHORIZATION)
 public class AuthorizationRequestFilter implements ContainerRequestFilter
 {
 	private static final Logger logger = LoggerFactory.getLogger(AuthorizationRequestFilter.class);
-	private final List<String>tokenCkList;
+	private List<String>tokenCkList;
 	@Inject
 	javax.inject.Provider<UriInfo> uriInfo;
 
@@ -41,16 +46,21 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter
 	{
 		this.tokenCkList = tokenCkList;
 	}
+	public AuthorizationRequestFilter(){};
 
 	@Override
 	public void filter(ContainerRequestContext requestContext)
 			throws IOException
 	{
+		//获取需检验的token url集合
+		this.tokenCkList= FeatureAnnotatedFactory.gettokenCkListInstance();
+
 		//得到访问的方法 例如GET,POST
 		String method = requestContext.getMethod().toLowerCase();
 		//得到访问路径
 		String path = "/"+((ContainerRequest) requestContext).getPath(true).toLowerCase();
 
+		//判断是否需要跳过验证token，默认为false
 		boolean skipCheck=true;
 		for(String url:tokenCkList)
 		{
@@ -61,9 +71,9 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter
 		}
 		if(skipCheck)
 			return;
+
 		//获取头信息中的token
 		String tokenText=requestContext.getHeaderString("Authorization");
-
 
 		//如果token为空抛出
 		if (tokenText == null)
@@ -79,6 +89,12 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter
 			{
 				throw new WebApplicationException("Authentication failed");
 			}
+
+			User user=(User)session.getAttribute("user");
+
+			//注入SecurityContext
+			requestContext.setSecurityContext(new SecurityContextAuthorizer(uriInfo,user, new String[]{"user"}));
+
 			/*String userId=JwtUtil.getUserId(strToken);//反解出Name
 			String[] roles=JwtUtil.getRoles(strToken);//反解出角色
 			int version=JwtUtil.getVersion(strToken);//得到版本
@@ -106,8 +122,10 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter
 			else {
 				logger.info("name, roles or version missing from token");
 			}*/
+			return;
 		}
-		else {
+		else
+		{
 			logger.info("token is invalid");
 
 		}

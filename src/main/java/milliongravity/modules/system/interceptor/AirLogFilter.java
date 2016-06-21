@@ -117,7 +117,7 @@ public class AirLogFilter implements ContainerRequestFilter, ClientRequestFilter
         }
 
         // 保存日志
-        LogUtils.saveLog(requestContext, null,null,timeCost);
+        LogUtils.saveAccessLog(requestContext, null,null,timeCost);
         /*long id = logSequence.incrementAndGet();
         StringBuilder b = new StringBuilder();
         printResponseLine(SERVER_RESPONSE, b, id, responseContext.getStatus());

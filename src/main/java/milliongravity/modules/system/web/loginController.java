@@ -77,9 +77,9 @@ public class loginController extends BaseController{
     @Path("test")
     @Produces(MediaType.APPLICATION_JSON)
     @TokenCheck
-    public  String  test( String test)
+    public  void  test( String test)
     {
-        return test;
+        System.out.println("11111");
     }
 
     @POST
